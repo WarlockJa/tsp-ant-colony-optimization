@@ -14,11 +14,21 @@ export default function ACOHeatmap() {
       height="100vh"
       className="translate-x-[0.5em] translate-y-[0.5em]"
     >
+      {heatmap.map((line) => (
+        <Line
+          x1={line.pointA.x}
+          y1={line.pointA.y}
+          x2={line.pointB.x}
+          y2={line.pointB.y}
+          width={line.intensity}
+        />
+      ))}
       <Line
-        x1={mapDotsData[0].x}
-        x2={heatmap.x}
-        y1={mapDotsData[0].y}
-        y2={heatmap.y}
+        x1={heatmap[0].pointA.x}
+        y1={heatmap[0].pointA.y}
+        x2={heatmap[heatmap.length - 1].pointB.x}
+        y2={heatmap[heatmap.length - 1].pointB.y}
+        color="white"
       />
     </svg>
   );

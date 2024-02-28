@@ -1,4 +1,4 @@
-import getDistance from "@/app/utils/getDistance";
+import { findClosestArrayDot } from "./findClosestArrayDot";
 
 export default function getRoute({
   mapDotsData,
@@ -6,37 +6,38 @@ export default function getRoute({
 }: {
   mapDotsData: IDot[];
   startIndex: number;
-}) {
-  const traverseArray = Array.from({ length: mapDotsData.length }).map(
-    (_, index) => index
-  );
+}): IHeatmapLine[] {
+  // TODO remove pointA - get data from index-1
+  // TODO make a recursion
+  let heatmapResult: IHeatmapLine[] = [];
+  // index in mapDotsData for the currently processed Dot
+  let currentDotIndex = startIndex;
+  // shallow copy of the mapDots array to remove already processed dots
+  let dotsArrayCopy = mapDotsData;
+  do {
+    // finding current dot data
+    const currentDot = mapDotsData[currentDotIndex];
+    // removing current dot from the copiesd dots array
+    dotsArrayCopy = dotsArrayCopy.filter(
+      (dot) => dot.x !== currentDot.x && dot.y !== currentDot.y
+    );
+    // finding closest dot to the current
+    const closestDot = findClosestArrayDot({
+      mapDotsData: dotsArrayCopy,
+      Dot: currentDot,
+    });
 
-  // // TEST
-  // do {
+    // finding index of the found dot
+    currentDotIndex = mapDotsData.findIndex(
+      (dot) => dot.x === closestDot.x && dot.y === closestDot.y
+    );
+    // saving result
+    heatmapResult.push({
+      pointA: currentDot,
+      pointB: closestDot,
+      intensity: 5,
+    });
+  } while (dotsArrayCopy.length > 1);
 
-  // } while (traverseArray.length > 0);
-
-  const currentDot = mapDotsData[startIndex];
-  const arrayWithoutCurrentDot = mapDotsData.filter(
-    (dot) => dot.x !== currentDot.x && dot.y !== currentDot.y
-  );
-  const closestDot = findClosestArrayDot(arrayWithoutCurrentDot, currentDot);
-
-  // const heatmap: IHeatmapLine[] = dotsArray.map(dot => {
-
-  // })
-  return closestDot;
-}
-
-function findClosestArrayDot(mapDotsData: IDot[], Dot: IDot) {
-  // Use reduce to find the element with the minimum distance
-  const closest = mapDotsData.reduce((previous, current) => {
-    const currentDistance = getDistance(current, Dot);
-    const previousDistance = previous ? getDistance(previous, Dot) : Infinity;
-
-    return currentDistance < previousDistance ? current : previous;
-  }, mapDotsData[0]);
-
-  // Return the closest element
-  return closest;
+  return heatmapResult;
 }
