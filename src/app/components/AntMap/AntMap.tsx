@@ -22,7 +22,6 @@ export default function AntMap() {
   }, [mapGenerateFlag]);
   // waiting for client initilization to avoid Math.random() server/client mismatch
   return !mapGenerateFlag ? (
-    // return getReactRandom() === null || !mapGenerateFlag ? (
     <>Loading...</>
   ) : (
     <>

@@ -9,7 +9,6 @@ interface IACOParameters {
 }
 
 interface IHeatmapLine {
-  pointA: IDot;
-  pointB: IDot;
+  point: IDot;
   intensity: number;
 }
