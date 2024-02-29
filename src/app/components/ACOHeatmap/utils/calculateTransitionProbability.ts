@@ -17,12 +17,10 @@
 //     β (beta): Controls the relative importance of the heuristic information. Higher beta values emphasize the influence of the heuristic.
 
 export function calculateTransitionProbability(
-  cities: IDot[],
-  i,
-  j,
-  pheromones,
-  alpha,
-  beta
+  dotsArray: IDot[],
+  indexDotA,
+  indexDotB,
+  desirabilityTable
 ) {
   const numCities = pheromones.length;
   let numerator = pheromones[i][j] ** alpha;

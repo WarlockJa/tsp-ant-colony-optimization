@@ -1,12 +1,29 @@
-import { mapDotsDataAtom } from "@/store/jotai";
+import {
+  desirabilityMatrixAtom,
+  mapDotsDataAtom,
+  solveFlagAtom,
+} from "@/store/jotai";
 import { useAtom } from "jotai";
 import getRoute from "./utils/getRoute";
+import initialiseDesirabilityMatrix from "./utils/initialiseDesirabilityMatrix";
 
 export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
   const [mapDotsData] = useAtom(mapDotsDataAtom);
+  const [solveFlag] = useAtom(solveFlagAtom);
+  const [desirabilityMatrix, setDesirabilityMatrix] = useAtom(
+    desirabilityMatrixAtom
+  );
 
-  if (mapDotsData.length === 0 || !screenRatio) return null;
+  if (mapDotsData.length === 0 || !screenRatio || !solveFlag) return null;
   const heatmap = getRoute({ mapDotsData, startIndex: 0, screenRatio });
+
+  // generating desirability matrix from mapDotsData
+  if (!desirabilityMatrix) {
+    setDesirabilityMatrix(
+      initialiseDesirabilityMatrix({ initialPheromone: 1, mapDotsData })
+    );
+    return null;
+  }
 
   return (
     <svg

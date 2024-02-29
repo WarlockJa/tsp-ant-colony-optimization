@@ -7,8 +7,8 @@ export default function generateDots(quantity: number) {
     // trying to generate a new valid position
     const newPosition = generateNeighbourPosition({
       array: positionsArray,
-      min: 3,
-      max: 97,
+      min: 5,
+      max: 95,
       minDistance: 5,
       triesNumber: 33,
     });

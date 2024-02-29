@@ -2,6 +2,7 @@ import {
   mapDotsQuantityAtom,
   mapGenerateFlagAtom,
   parametersAtom,
+  solveFlagAtom,
 } from "@/store/jotai";
 import { useAtom } from "jotai";
 
@@ -9,19 +10,24 @@ export default function ACOControls() {
   const [parameters, setParameters] = useAtom(parametersAtom);
   const [quantity, setQuantity] = useAtom(mapDotsQuantityAtom);
   const [, setMapGenerateFlag] = useAtom(mapGenerateFlagAtom);
+  const [, setSolveFlag] = useAtom(solveFlagAtom);
 
   return (
     <nav className="fixed left-0 top-0 flex gap-4 items-center z-20">
       <button
         className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
         title="Start ACO sequence"
+        onClick={() => setSolveFlag(true)}
       >
         Solve
       </button>
       <button
         className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
         title="Generate new dots"
-        onClick={() => setMapGenerateFlag(false)}
+        onClick={() => {
+          setMapGenerateFlag(false);
+          setSolveFlag(false);
+        }}
       >
         Generate
       </button>
