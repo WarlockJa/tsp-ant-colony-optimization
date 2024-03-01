@@ -19,7 +19,12 @@ export default function initialiseDesirabilityMatrix({
         const heuristic = 1 / getDistance(mapDotsData[i], mapDotsData[j]);
         const pheromone = initialPheromone;
         // adding element to the matrix
-        desirabilityMatrix[i][j] = { heuristic, pheromone };
+        desirabilityMatrix[i][j] = {
+          pointA: mapDotsData[i],
+          pointB: mapDotsData[j],
+          heuristic,
+          pheromone,
+        };
       }
     }
   }

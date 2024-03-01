@@ -16,6 +16,8 @@ interface IHeatmapLine {
 }
 
 interface IDesirabilityMatrix_VectorItem {
+  pointA: IDot;
+  pointB: IDot;
   heuristic: number; // inverse distance
   pheromone: number; // current pheromone level
 }

@@ -1,4 +1,5 @@
 import {
+  desirabilityMatrixAtom,
   mapGenerateFlagAtom,
   parametersAtom,
   solveFlagAtom,
@@ -9,6 +10,7 @@ export default function ACOControls() {
   const [parameters, setParameters] = useAtom(parametersAtom);
   const [, setMapGenerateFlag] = useAtom(mapGenerateFlagAtom);
   const [, setSolveFlag] = useAtom(solveFlagAtom);
+  const [, setDesirabilityMatrix] = useAtom(desirabilityMatrixAtom);
 
   return (
     <nav className="fixed left-0 top-0 flex gap-4 items-center z-20">
@@ -25,6 +27,7 @@ export default function ACOControls() {
         onClick={() => {
           setMapGenerateFlag(false);
           setSolveFlag(false);
+          setDesirabilityMatrix(null);
         }}
       >
         Generate
