@@ -4,9 +4,11 @@ import { atom } from "jotai";
 export const parametersAtom = atom<IACOParameters>({
   quantity: 20,
   initialPheromone: 0.2,
+  evaporationRate: 0.1,
   maxIterationsCounter: 10,
   alpha: 1,
   beta: 4,
+  q0: 4,
 });
 
 // ant map data
@@ -31,9 +33,11 @@ export const writeOnlySetSolveFlagFlaseAtom = atom(null, (get, set) => {
   set(solveFlagAtom, false);
 });
 
-// TEST
 // interactions counter flag
 export const iterationsCounterAtom = atom<number>(0);
 export const writeOnlyResetIterationsCounterAtom = atom(null, (get, set) => {
   set(iterationsCounterAtom, 0);
 });
+
+// best route
+export const bestRouteAtom = atom<number>(Infinity);

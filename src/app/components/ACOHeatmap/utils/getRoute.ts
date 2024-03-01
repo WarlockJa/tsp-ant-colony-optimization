@@ -1,54 +1,75 @@
-import { findClosestArrayDot } from "./findClosestArrayDot";
-
 export default function getRoute({
-  mapDotsData,
+  desirabilityMatrix,
   startIndex,
-  screenRatio,
+  explorationDesirabilityMatrix,
+  mapDotsData,
+  q0,
 }: {
-  mapDotsData: IDot[];
+  desirabilityMatrix: TDesirabilityMatrix;
+  explorationDesirabilityMatrix: TDesirabilityMatrix;
   startIndex: number;
-  screenRatio: number;
-}): IHeatmapLine[] {
-  // index in mapDotsData for the currently processed Dot
+  mapDotsData: IDot[];
+  q0: number;
+}): {
+  routeLength: number;
+  updatedExplorationDesirabilityMatrix: TDesirabilityMatrix;
+} {
+  // resulting pheromone changes
+  let updatedExplorationDesirabilityMatrix = explorationDesirabilityMatrix;
+  // resulting route length
+  let routeLength = 0;
+  // keeping track of unvisited dots
+  let mapDotsDataMutable = mapDotsData;
+  // resulting route. Contains a route sequence of indexes for dots found in mapDotsData starting with startIndex
+  let route: number[] = [startIndex];
+  // index for the current dot
   let currentDotIndex = startIndex;
-  // shallow copy of the mapDots array with applied multiplier
-  const mapDotsDataWithMultiplier = mapDotsData.map((dot) => ({
-    x: dot.x * screenRatio,
-    y: dot.y,
-  }));
-  // copy of the mapDotsArrayWithMultiplier to be mutated in calculations
-  let dotsArrayCopyMutable = mapDotsDataWithMultiplier;
-  // result array. filling first point data with startIndex dot
-  let heatmapResult: IHeatmapLine[] = [
-    {
-      point: mapDotsData[currentDotIndex],
-      intensity: 5,
-    },
-  ];
 
+  // Calculate Route
   do {
     // finding current dot data
-    const currentDot = mapDotsDataWithMultiplier[currentDotIndex];
+    const currentDot = mapDotsData[currentDotIndex];
     // removing current dot from the copied dots array
-    dotsArrayCopyMutable = dotsArrayCopyMutable.filter(
+    mapDotsDataMutable = mapDotsDataMutable.filter(
       (dot) => dot.x !== currentDot.x && dot.y !== currentDot.y
     );
-    // finding closest dot to the current
-    const closestDot = findClosestArrayDot({
-      mapDotsData: dotsArrayCopyMutable,
-      Dot: currentDot,
-    });
+
+    // finding dot to travel to
+    // TODO make dis
+    const nextDot = findNextDot();
 
     // finding index of the found dot
-    currentDotIndex = mapDotsDataWithMultiplier.findIndex(
-      (dot) => dot.x === closestDot.x && dot.y === closestDot.y
+    const nextDotIndex = mapDotsData.findIndex(
+      (dot) => dot.x === nextDot.x && dot.y === nextDot.y
     );
-    // saving result
-    heatmapResult.push({
-      point: mapDotsData[currentDotIndex],
-      intensity: 5,
-    });
-  } while (dotsArrayCopyMutable.length > 1);
+    // finding distance between currentDot and nextDot, adding to routeLength
+    // desirabilityMatrix contains data only in the upper diagonal part to avoid duplication (route A->B equivalent to route B->A) therefore to find data for two indexes from mapDotsData i,j in desirabilityMatrix choose whichever index is smaller to be the first. i.e. if i<j data is at desirabilityMatrix[i][j], if i>j data is at desirabilityMatrix[j][i]
+    routeLength +=
+      currentDotIndex > nextDotIndex
+        ? desirabilityMatrix[nextDotIndex][currentDotIndex]!.distance
+        : desirabilityMatrix[currentDotIndex][nextDotIndex]!.distance;
 
-  return heatmapResult;
+    // updating currentDotIndex
+    currentDotIndex = nextDotIndex;
+    // saving route
+    route.push(nextDotIndex);
+  } while (mapDotsDataMutable.length > 1);
+
+  // calculating pheromoneShift. q0 is an arbitrary chosen constant
+  const pheromoneShift = q0 / routeLength;
+  // adding pheromoneShift to all paths of the route in updatedExplorationDesirabilityMatrix
+  for (let index = 1; index < route.length; index++) {
+    const pointAIndex = route[index - 1];
+    const pointBIndex = route[index];
+    // applying same logic finding matrix position as in routeLength clculations
+    pointAIndex < pointBIndex
+      ? (updatedExplorationDesirabilityMatrix[pointAIndex][
+          pointBIndex
+        ]!.pheromone += pheromoneShift)
+      : (updatedExplorationDesirabilityMatrix[pointBIndex][
+          pointAIndex
+        ]!.pheromone += pheromoneShift);
+  }
+
+  return { routeLength, updatedExplorationDesirabilityMatrix };
 }

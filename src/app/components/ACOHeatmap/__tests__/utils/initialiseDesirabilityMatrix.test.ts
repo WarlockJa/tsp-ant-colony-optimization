@@ -1,6 +1,5 @@
-import getDistance from "@/app/utils/getDistance";
 import { describe, expect, it } from "vitest";
-import initialiseDesirabilityMatrix from "../../utils/initialiseDesirabilityMatrix";
+import initialiseDesirabilityMatrix from "../../utils/initialiseDesirabilityMatrix.1";
 
 const mockMapDotsData: IDot[] = [
   { x: 2, y: 2 },
@@ -8,6 +7,7 @@ const mockMapDotsData: IDot[] = [
   { x: 3, y: 3 },
   { x: 1, y: 1 },
 ];
+const mockScreenRatio = 1.3652822151224706;
 
 describe("testing initialiseDesirabilityMatrix function", () => {
   it("takes vaild data and returns desirability matrix", () => {
@@ -16,19 +16,19 @@ describe("testing initialiseDesirabilityMatrix function", () => {
       [
         undefined,
         {
-          heuristic: 0.08838834764831843,
+          heuristic: 0.07386247318754996,
           pheromone: mockInitialPheromone,
           pointA: { x: 2, y: 2 },
           pointB: { x: 10, y: 10 },
         },
         {
-          heuristic: 0.7071067811865475,
+          heuristic: 0.5908997855003997,
           pheromone: mockInitialPheromone,
           pointA: { x: 2, y: 2 },
           pointB: { x: 3, y: 3 },
         },
         {
-          heuristic: 0.7071067811865475,
+          heuristic: 0.5908997855003997,
           pheromone: mockInitialPheromone,
           pointA: { x: 2, y: 2 },
           pointB: { x: 1, y: 1 },
@@ -38,13 +38,13 @@ describe("testing initialiseDesirabilityMatrix function", () => {
         undefined,
         undefined,
         {
-          heuristic: 0.10101525445522107,
+          heuristic: 0.08441425507148567,
           pheromone: mockInitialPheromone,
           pointA: { x: 10, y: 10 },
           pointB: { x: 3, y: 3 },
         },
         {
-          heuristic: 0.07856742013183861,
+          heuristic: 0.06565553172226664,
           pheromone: mockInitialPheromone,
           pointA: { x: 10, y: 10 },
           pointB: { x: 1, y: 1 },
@@ -55,7 +55,7 @@ describe("testing initialiseDesirabilityMatrix function", () => {
         undefined,
         undefined,
         {
-          heuristic: 0.35355339059327373,
+          heuristic: 0.29544989275019984,
           pheromone: mockInitialPheromone,
           pointA: { x: 3, y: 3 },
           pointB: { x: 1, y: 1 },
@@ -66,6 +66,7 @@ describe("testing initialiseDesirabilityMatrix function", () => {
     const result = initialiseDesirabilityMatrix({
       initialPheromone: mockInitialPheromone,
       mapDotsData: mockMapDotsData,
+      screenRatio: mockScreenRatio,
     });
     expect(result).toEqual(expectedResult);
   });

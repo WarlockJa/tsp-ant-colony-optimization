@@ -149,6 +149,25 @@ export default function ACOControls() {
           }
         />
       </div>
+      <div className="flex flex-col text-teal-50">
+        <div className="flex justify-between pr-4">
+          <label htmlFor="ACOControls__input--q0">q0 constant</label>
+          <label htmlFor="ACOControls__input--q0">{parameters.q0}</label>
+        </div>
+        <input
+          type="range"
+          min={1}
+          max={4}
+          id="ACOControls__input--q0"
+          value={parameters.q0}
+          onChange={(e) =>
+            setParameters((prev) => ({
+              ...prev,
+              q0: Number(e.target.value),
+            }))
+          }
+        />
+      </div>
     </nav>
   );
 }

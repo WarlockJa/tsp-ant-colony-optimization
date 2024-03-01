@@ -9,6 +9,8 @@ interface IACOParameters {
   alpha: number; // pheromone trail importance
   beta: number; // distance (heuristic) importance
   initialPheromone: number; // pheromone level desirability matrix is initialised with
+  evaporationRate: number; // pheromone evaporation rate. Applied after each Exploration stage during Pheromone Update
+  q0: number; // constant for pheromone update calculations. (Q / routeLength) is added to all paths of the route
 }
 
 interface IHeatmapLine {
@@ -19,7 +21,8 @@ interface IHeatmapLine {
 interface IDesirabilityMatrix_VectorItem {
   pointA: IDot;
   pointB: IDot;
-  heuristic: number; // inverse distance
+  distance: number; // distance
+  heuristic: number; // inverse distance with the potential for other parameters
   pheromone: number; // current pheromone level
 }
 
