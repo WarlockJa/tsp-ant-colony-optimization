@@ -1,23 +1,36 @@
 import {
-  desirabilityMatrixAtom,
-  mapGenerateFlagAtom,
   parametersAtom,
-  solveFlagAtom,
+  writeOnlyResetDesirabilityMatrixAtom,
+  writeOnlyResetIterationsCounterAtom,
+  writeOnlySetMapGenerateFlagFalse,
+  writeOnlySetSolveFlagFlaseAtom,
+  writeOnlySetSolveFlagTrueAtom,
 } from "@/store/jotai";
 import { useAtom } from "jotai";
 
 export default function ACOControls() {
+  // console.log("ACOControls - Rerender");
   const [parameters, setParameters] = useAtom(parametersAtom);
-  const [, setMapGenerateFlag] = useAtom(mapGenerateFlagAtom);
-  const [, setSolveFlag] = useAtom(solveFlagAtom);
-  const [, setDesirabilityMatrix] = useAtom(desirabilityMatrixAtom);
+  // generate dots map flag
+  const [, setMapGenerateFlagFalse] = useAtom(writeOnlySetMapGenerateFlagFalse);
+  // trigger to start solving
+  const [, setSolveFlagTrue] = useAtom(writeOnlySetSolveFlagTrueAtom);
+  const [, setSolveFlagFalse] = useAtom(writeOnlySetSolveFlagFlaseAtom);
+  // iterations counter
+  const [, resetIterationCounter] = useAtom(
+    writeOnlyResetIterationsCounterAtom
+  );
+  // matrix with heuristic and pheromone weights for paths between dots
+  const [, resetDesirabilityMatrix] = useAtom(
+    writeOnlyResetDesirabilityMatrixAtom
+  );
 
   return (
     <nav className="fixed left-0 top-0 flex gap-4 items-center z-20">
       <button
         className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
         title="Start ACO sequence"
-        onClick={() => setSolveFlag(true)}
+        onClick={() => setSolveFlagTrue()}
       >
         Solve
       </button>
@@ -25,9 +38,10 @@ export default function ACOControls() {
         className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
         title="Generate new dots"
         onClick={() => {
-          setMapGenerateFlag(false);
-          setSolveFlag(false);
-          setDesirabilityMatrix(null);
+          setMapGenerateFlagFalse();
+          setSolveFlagFalse();
+          resetDesirabilityMatrix();
+          resetIterationCounter();
         }}
       >
         Generate
@@ -108,6 +122,29 @@ export default function ACOControls() {
             setParameters((prev) => ({
               ...prev,
               initialPheromone: Number(e.target.value),
+            }))
+          }
+        />
+      </div>
+      <div className="flex flex-col text-teal-50">
+        <div className="flex justify-between pr-4">
+          <label htmlFor="ACOControls__input--maxIterations">
+            Max Iterations
+          </label>
+          <label htmlFor="ACOControls__input--maxIterations">
+            {parameters.maxIterationsCounter}
+          </label>
+        </div>
+        <input
+          type="range"
+          min={10}
+          max={100}
+          id="ACOControls__input--maxIterations"
+          value={parameters.maxIterationsCounter}
+          onChange={(e) =>
+            setParameters((prev) => ({
+              ...prev,
+              maxIterationsCounter: Number(e.target.value),
             }))
           }
         />
