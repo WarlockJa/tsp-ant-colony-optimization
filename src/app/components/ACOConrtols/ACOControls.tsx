@@ -1,5 +1,4 @@
 import {
-  mapDotsQuantityAtom,
   mapGenerateFlagAtom,
   parametersAtom,
   solveFlagAtom,
@@ -8,7 +7,6 @@ import { useAtom } from "jotai";
 
 export default function ACOControls() {
   const [parameters, setParameters] = useAtom(parametersAtom);
-  const [quantity, setQuantity] = useAtom(mapDotsQuantityAtom);
   const [, setMapGenerateFlag] = useAtom(mapGenerateFlagAtom);
   const [, setSolveFlag] = useAtom(solveFlagAtom);
 
@@ -69,15 +67,46 @@ export default function ACOControls() {
       <div className="flex flex-col text-teal-50">
         <div className="flex justify-between pr-4">
           <label htmlFor="ACOControls__input--quantity">Quantity</label>
-          <label htmlFor="ACOControls__input--quantity">{quantity}</label>
+          <label htmlFor="ACOControls__input--quantity">
+            {parameters.quantity}
+          </label>
         </div>
         <input
           type="range"
           min={4}
           max={100}
           id="ACOControls__input--quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
+          value={parameters.quantity}
+          onChange={(e) =>
+            setParameters((prev) => ({
+              ...prev,
+              quantity: Number(e.target.value),
+            }))
+          }
+        />
+      </div>
+      <div className="flex flex-col text-teal-50">
+        <div className="flex justify-between pr-4">
+          <label htmlFor="ACOControls__input--quantity">
+            initial pheromone
+          </label>
+          <label htmlFor="ACOControls__input--quantity">
+            {parameters.initialPheromone}
+          </label>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={1}
+          step={0.01}
+          id="ACOControls__input--quantity"
+          value={parameters.initialPheromone}
+          onChange={(e) =>
+            setParameters((prev) => ({
+              ...prev,
+              initialPheromone: Number(e.target.value),
+            }))
+          }
         />
       </div>
     </nav>

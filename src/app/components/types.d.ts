@@ -4,8 +4,10 @@ interface IDot {
 }
 
 interface IACOParameters {
+  quantity: number; // number of dots to be generated
   alpha: number; // pheromone trail importance
   beta: number; // distance (heuristic) importance
+  initialPheromone: number; // pheromone level desirability matrix is initialised with
 }
 
 interface IHeatmapLine {

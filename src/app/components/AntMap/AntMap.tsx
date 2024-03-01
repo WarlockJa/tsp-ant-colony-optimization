@@ -1,14 +1,14 @@
 import { useAtom } from "jotai";
 import {
   mapDotsDataAtom,
-  mapDotsQuantityAtom,
   mapGenerateFlagAtom,
+  parametersAtom,
 } from "@/store/jotai";
 import generateDots from "./utils/generateDots";
 import { useEffect } from "react";
 
 export default function AntMap() {
-  const [quantity] = useAtom(mapDotsQuantityAtom);
+  const [parameters] = useAtom(parametersAtom);
   const [mapGenerateFlag, setMapGenerateFlag] = useAtom(mapGenerateFlagAtom);
   const [mapDotData, setMapDotsData] = useAtom(mapDotsDataAtom);
 
@@ -17,7 +17,7 @@ export default function AntMap() {
     if (!mapGenerateFlag) {
       setMapGenerateFlag(true);
       // saving dots data to the state
-      setMapDotsData(generateDots(quantity));
+      setMapDotsData(generateDots(parameters.quantity));
     }
   }, [mapGenerateFlag]);
   // waiting for client initilization to avoid Math.random() server/client mismatch
