@@ -1,3 +1,5 @@
+import findNextDot from "./findNextDot";
+
 export default function getRoute({
   desirabilityMatrix,
   startIndex,
@@ -34,9 +36,12 @@ export default function getRoute({
       (dot) => dot.x !== currentDot.x && dot.y !== currentDot.y
     );
 
+    // TEST this is a plug to replace findNextDot to test getRoute logic in getRoute.test.ts
+    // TEST tolerated because findNextDot by design returns random data
+    const nextDot = mapDotsData[currentDotIndex + 1]; // TEST
     // finding dot to travel to
     // TODO make dis
-    const nextDot = findNextDot();
+    // const nextDot = findNextDot();
 
     // finding index of the found dot
     const nextDotIndex = mapDotsData.findIndex(
@@ -54,13 +59,20 @@ export default function getRoute({
     // saving route
     route.push(nextDotIndex);
   } while (mapDotsDataMutable.length > 1);
+  // adding path length from the last dot to the first
+  routeLength +=
+    currentDotIndex > startIndex
+      ? desirabilityMatrix[startIndex][currentDotIndex]!.distance
+      : desirabilityMatrix[currentDotIndex][startIndex]!.distance;
 
   // calculating pheromoneShift. q0 is an arbitrary chosen constant
   const pheromoneShift = q0 / routeLength;
+
   // adding pheromoneShift to all paths of the route in updatedExplorationDesirabilityMatrix
   for (let index = 1; index < route.length; index++) {
     const pointAIndex = route[index - 1];
     const pointBIndex = route[index];
+
     // applying same logic finding matrix position as in routeLength clculations
     pointAIndex < pointBIndex
       ? (updatedExplorationDesirabilityMatrix[pointAIndex][
@@ -70,6 +82,12 @@ export default function getRoute({
           pointAIndex
         ]!.pheromone += pheromoneShift);
   }
+  // adjusting pheromones for the path from last dot to first
+  currentDotIndex > startIndex
+    ? (desirabilityMatrix[startIndex][currentDotIndex]!.pheromone +=
+        pheromoneShift)
+    : (desirabilityMatrix[currentDotIndex][startIndex]!.pheromone +=
+        pheromoneShift);
 
   return { routeLength, updatedExplorationDesirabilityMatrix };
 }
