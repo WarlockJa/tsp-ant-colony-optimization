@@ -10,13 +10,15 @@ import { useAtom } from "jotai";
 import getRoute from "./utils/getRoute";
 import initialiseDesirabilityMatrix from "./utils/initialiseDesirabilityMatrix";
 import Line from "@/app/utils/Line";
+import { useEffect } from "react";
+import BestRoutePlot from "./BestRoutePlot";
 
 export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
   // console.log("ACOHeatmap - Rerender");
   // dots coordinates data
   const [mapDotsData] = useAtom(mapDotsDataAtom);
   // trigger to start solving
-  const [solveFlag] = useAtom(solveFlagAtom);
+  const [solveFlag, setSolveFlag] = useAtom(solveFlagAtom);
   // matrix with heuristic and pheromone weights for paths between dots
   const [desirabilityMatrix, setDesirabilityMatrix] = useAtom(
     desirabilityMatrixAtom
@@ -29,6 +31,20 @@ export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
   );
   // best route
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
+
+  // Reset on parameters change
+  useEffect(() => {
+    setDesirabilityMatrix(null);
+    setSolveFlag(false);
+    setBestRoute({ length: Infinity, route: [] });
+    setIterationsCounter(0);
+  }, [
+    parameters.alpha,
+    parameters.beta,
+    parameters.evaporationRate,
+    parameters.initialPheromone,
+    parameters.q0,
+  ]);
 
   if (mapDotsData.length === 0 || !screenRatio || !solveFlag) return null;
 
@@ -47,25 +63,27 @@ export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
   // at each stage desirabilityMatrix updated which causes a ACOHeatmap rerender
   // the amount of iterations is limited by parameters.maxIterationsCounter
   if (iterationsCounter < parameters.maxIterationsCounter) {
-    // TODO implement acutal ACO here
     let explorationDesirabilityMatrix = desirabilityMatrix;
-    let explorationBestRoute = Infinity;
+    let explorationBestRoute: IBestRoute = { length: Infinity, route: [] };
     mapDotsData.forEach((_, dotIndex) => {
       // Step 1 (Exploration Phase)
       // Calculate Route for each dot with dotIndex as starting point. Input: desirabilityMatrix: to make route calculations, mapDotsData: to keep track of the starting dot and unvisited dots, startIndex: defines starting dot, explorationDesirabilityMatrix: accumulates pheromone changes for the exploration phase
       // Output: routeLength, explorationDesirabilityMatrix - updated with a route changed pheromones
-      const { routeLength, updatedExplorationDesirabilityMatrix } = getRoute({
-        desirabilityMatrix,
-        explorationDesirabilityMatrix,
-        startIndex: dotIndex,
-        mapDotsData,
-        q0: parameters.q0,
-      });
+      const { routeLength, route, updatedExplorationDesirabilityMatrix } =
+        getRoute({
+          desirabilityMatrix,
+          explorationDesirabilityMatrix,
+          startIndex: dotIndex,
+          mapDotsData,
+          q0: parameters.q0,
+          alpha: parameters.alpha,
+          beta: parameters.beta,
+        });
 
       // updating exploration data
       explorationDesirabilityMatrix = updatedExplorationDesirabilityMatrix;
-      if (explorationBestRoute > routeLength)
-        explorationBestRoute = routeLength;
+      if (explorationBestRoute.length > routeLength)
+        explorationBestRoute = { length: routeLength, route };
     });
 
     // Step 2 (Pheromone Update)
@@ -86,48 +104,51 @@ export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
       )
     );
 
-    // const explorationDesirabilityMatrix = desirabilityMatrix.map((row) => {
-    //   return row.map((item) => {
-    //     return item ? { ...item, pheromone: item.pheromone + 0.2 } : item;
-    //   });
-    // });
-
     // Step 3 (Iteration)
     // replace desirabilityMatrix with explorationDesirabilityMatrix. Increase iterationCounter
     // setting timeout 0 to prevent React from throwing "too many rerenders" error
     setTimeout(() => {
       setDesirabilityMatrix(explorationDesirabilityMatrix);
       setIterationsCounter(iterationsCounter + 1);
-      if (bestRoute > explorationBestRoute) setBestRoute(explorationBestRoute);
+      if (bestRoute.length > explorationBestRoute.length)
+        setBestRoute(explorationBestRoute);
     }, 0);
   }
 
-  // const heatmap = getRoute({ mapDotsData, startIndex: 0, screenRatio });
   return (
-    <svg
-      width="100vw"
-      height="100vh"
-      className="translate-x-[0.5em] translate-y-[0.5em]"
-    >
-      {desirabilityMatrix
-        .map((row, indexI) => {
-          return row.map((item, indexJ) => {
-            return item ? (
-              <Line
-                key={`line${indexI}${indexJ}`}
-                x1={item.pointA.x}
-                x2={item.pointB.x}
-                y1={item.pointA.y}
-                y2={item.pointB.y}
-                width={item.pheromone}
-              />
-            ) : (
-              item
-            );
-          });
-        })
-        .flat()
-        .filter((item) => item)}
-    </svg>
+    <>
+      <div className="absolute left-0 top-[3.2em] text-teal-50">
+        Best Route: {bestRoute.length}
+      </div>
+      <div className="absolute left-0 top-[4.2em] text-teal-50">
+        Iteration N: {iterationsCounter}
+      </div>
+      <svg
+        width="100vw"
+        height="100vh"
+        className="translate-x-[0.5em] translate-y-[0.5em]"
+      >
+        {desirabilityMatrix
+          .map((row, indexI) => {
+            return row.map((item, indexJ) => {
+              return item ? (
+                <Line
+                  key={`line${indexI}${indexJ}`}
+                  x1={item.pointA.x}
+                  x2={item.pointB.x}
+                  y1={item.pointA.y}
+                  y2={item.pointB.y}
+                  width={item.pheromone}
+                />
+              ) : (
+                item
+              );
+            });
+          })
+          .flat()
+          .filter((item) => item)}
+        <BestRoutePlot mapDotsData={mapDotsData} route={bestRoute.route} />
+      </svg>
+    </>
   );
 }

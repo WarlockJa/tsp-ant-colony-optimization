@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import initialiseDesirabilityMatrix from "../../utils/initialiseDesirabilityMatrix";
 
-const mockMapDotsData: IDot[] = [
-  { x: 2, y: 2 },
-  { x: 10, y: 10 },
-  { x: 3, y: 3 },
-  { x: 1, y: 1 },
+const mockMapDotsData: IDotWithIndex[] = [
+  { x: 2, y: 2, index: 0 },
+  { x: 10, y: 10, index: 1 },
+  { x: 3, y: 3, index: 2 },
+  { x: 1, y: 1, index: 3 },
 ];
 const mockScreenRatio = 1.3652822151224706;
 

@@ -1,11 +1,16 @@
 import { describe, expect, it } from "vitest";
 import getRoute from "../../utils/getRoute";
 
-const mockDotsData: IDot[] = [
-  { x: 2, y: 2 },
-  { x: 10, y: 10 },
-  { x: 3, y: 3 },
-  { x: 1, y: 1 },
+// IMPORTANT in order for this test to work in getRoute "const nextDot = findNextDot({mapDotsDataMutable});" must be commented and replaced with "const nextDot = mapDotsData[currentDotIndex + 1];". This is necessary because findNextDot output is inherently random and no means found to mock nested functions output.
+
+const alpha = 1;
+const beta = 4;
+
+const mockDotsData: IDotWithIndex[] = [
+  { x: 2, y: 2, index: 0 },
+  { x: 10, y: 10, index: 1 },
+  { x: 3, y: 3, index: 2 },
+  { x: 1, y: 1, index: 3 },
 ];
 
 const mockDesirabilityMatrix: TDesirabilityMatrix = [
@@ -141,6 +146,8 @@ describe("Testing getRoute function", () => {
       mapDotsData: mockDotsData,
       startIndex,
       q0,
+      alpha,
+      beta,
     });
     expect(result).toEqual(expectedResult);
   });

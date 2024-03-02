@@ -3,6 +3,10 @@ interface IDot {
   y: number;
 }
 
+interface IDotWithIndex extends IDot {
+  index: number;
+}
+
 interface IACOParameters {
   maxIterationsCounter: number; // maximum amount of AOC cycles before termination
   quantity: number; // number of dots to be generated
@@ -27,3 +31,8 @@ interface IDesirabilityMatrix_VectorItem {
 }
 
 type TDesirabilityMatrix = Array<IDesirabilityMatrix_VectorItem | undefined>[];
+
+interface IBestRoute {
+  length: number;
+  route: number[];
+}

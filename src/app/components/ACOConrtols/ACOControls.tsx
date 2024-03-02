@@ -1,5 +1,6 @@
 import {
   parametersAtom,
+  writeOnlyResetBestRouteAtom,
   writeOnlyResetDesirabilityMatrixAtom,
   writeOnlyResetIterationsCounterAtom,
   writeOnlySetMapGenerateFlagFalse,
@@ -24,6 +25,8 @@ export default function ACOControls() {
   const [, resetDesirabilityMatrix] = useAtom(
     writeOnlyResetDesirabilityMatrixAtom
   );
+  // best route reset
+  const [, resetBestRoute] = useAtom(writeOnlyResetBestRouteAtom);
 
   return (
     <nav className="fixed left-0 top-0 flex gap-4 items-center z-20">
@@ -36,12 +39,25 @@ export default function ACOControls() {
       </button>
       <button
         className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
+        title="Reset values"
+        onClick={() => {
+          setSolveFlagFalse();
+          resetDesirabilityMatrix();
+          resetIterationCounter();
+          resetBestRoute();
+        }}
+      >
+        Reset
+      </button>
+      <button
+        className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
         title="Generate new dots"
         onClick={() => {
           setMapGenerateFlagFalse();
           setSolveFlagFalse();
           resetDesirabilityMatrix();
           resetIterationCounter();
+          resetBestRoute();
         }}
       >
         Generate
@@ -54,7 +70,8 @@ export default function ACOControls() {
         <input
           type="range"
           min={0}
-          max={10}
+          max={5}
+          step={0.01}
           id="ACOControls__input--alpha"
           value={parameters.alpha}
           onChange={(e) =>
@@ -73,7 +90,8 @@ export default function ACOControls() {
         <input
           type="range"
           min={0}
-          max={10}
+          max={5}
+          step={0.01}
           id="ACOControls__input--beta"
           value={parameters.beta}
           onChange={(e) =>
@@ -83,7 +101,7 @@ export default function ACOControls() {
       </div>
       <div className="flex flex-col text-teal-50">
         <div className="flex justify-between pr-4">
-          <label htmlFor="ACOControls__input--quantity">Quantity</label>
+          <label htmlFor="ACOControls__input--quantity">quantity</label>
           <label htmlFor="ACOControls__input--quantity">
             {parameters.quantity}
           </label>
@@ -129,7 +147,7 @@ export default function ACOControls() {
       <div className="flex flex-col text-teal-50">
         <div className="flex justify-between pr-4">
           <label htmlFor="ACOControls__input--maxIterations">
-            Max Iterations
+            max iterations
           </label>
           <label htmlFor="ACOControls__input--maxIterations">
             {parameters.maxIterationsCounter}
@@ -137,8 +155,8 @@ export default function ACOControls() {
         </div>
         <input
           type="range"
-          min={10}
-          max={100}
+          min={40}
+          max={500}
           id="ACOControls__input--maxIterations"
           value={parameters.maxIterationsCounter}
           onChange={(e) =>
@@ -151,19 +169,44 @@ export default function ACOControls() {
       </div>
       <div className="flex flex-col text-teal-50">
         <div className="flex justify-between pr-4">
-          <label htmlFor="ACOControls__input--q0">q0 constant</label>
+          <label htmlFor="ACOControls__input--q0">Q constant</label>
           <label htmlFor="ACOControls__input--q0">{parameters.q0}</label>
         </div>
         <input
           type="range"
           min={1}
           max={4}
+          step={0.1}
           id="ACOControls__input--q0"
           value={parameters.q0}
           onChange={(e) =>
             setParameters((prev) => ({
               ...prev,
               q0: Number(e.target.value),
+            }))
+          }
+        />
+      </div>
+      <div className="flex flex-col text-teal-50">
+        <div className="flex justify-between pr-4">
+          <label htmlFor="ACOControls__input--evaporationRate">
+            evaporation rate
+          </label>
+          <label htmlFor="ACOControls__input--evaporationRate">
+            {parameters.evaporationRate}
+          </label>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={1}
+          step={0.01}
+          id="ACOControls__input--evaporationRate"
+          value={parameters.evaporationRate}
+          onChange={(e) =>
+            setParameters((prev) => ({
+              ...prev,
+              evaporationRate: Number(e.target.value),
             }))
           }
         />

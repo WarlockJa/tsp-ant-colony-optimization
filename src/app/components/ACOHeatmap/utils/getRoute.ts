@@ -1,19 +1,24 @@
 import findNextDot from "./findNextDot";
 
 export default function getRoute({
-  desirabilityMatrix,
-  startIndex,
-  explorationDesirabilityMatrix,
-  mapDotsData,
-  q0,
+  desirabilityMatrix, // contains original data from before the exploration phase
+  startIndex, // dot index for mapDotsData to start with
+  explorationDesirabilityMatrix, // gathers all pheromone changes during exploration phase
+  mapDotsData, // dots map data
+  q0, // constant to calculate pheromone change when path is chosen for the route
+  alpha, // constant when choosing transition probability pheromone is raised to the power of alpha
+  beta, // constant when choosing transition probability heuristic is raised to the power of beta
 }: {
   desirabilityMatrix: TDesirabilityMatrix;
   explorationDesirabilityMatrix: TDesirabilityMatrix;
   startIndex: number;
-  mapDotsData: IDot[];
+  mapDotsData: IDotWithIndex[];
   q0: number;
+  alpha: number;
+  beta: number;
 }): {
   routeLength: number;
+  route: number[];
   updatedExplorationDesirabilityMatrix: TDesirabilityMatrix;
 } {
   // resulting pheromone changes
@@ -33,31 +38,32 @@ export default function getRoute({
     const currentDot = mapDotsData[currentDotIndex];
     // removing current dot from the copied dots array
     mapDotsDataMutable = mapDotsDataMutable.filter(
-      (dot) => dot.x !== currentDot.x && dot.y !== currentDot.y
+      (dot) => dot.index !== currentDot.index
     );
 
     // TEST this is a plug to replace findNextDot to test getRoute logic in getRoute.test.ts
     // TEST tolerated because findNextDot by design returns random data
-    const nextDot = mapDotsData[currentDotIndex + 1]; // TEST
+    // const nextDot = mapDotsData[currentDotIndex + 1]; // TEST
     // finding dot to travel to
-    // TODO make dis
-    // const nextDot = findNextDot();
+    const nextDot = findNextDot({
+      mapDotsDataMutable,
+      alpha,
+      beta,
+      currentDotIndex,
+      desirabilityMatrix,
+    });
 
-    // finding index of the found dot
-    const nextDotIndex = mapDotsData.findIndex(
-      (dot) => dot.x === nextDot.x && dot.y === nextDot.y
-    );
     // finding distance between currentDot and nextDot, adding to routeLength
     // desirabilityMatrix contains data only in the upper diagonal part to avoid duplication (route A->B equivalent to route B->A) therefore to find data for two indexes from mapDotsData i,j in desirabilityMatrix choose whichever index is smaller to be the first. i.e. if i<j data is at desirabilityMatrix[i][j], if i>j data is at desirabilityMatrix[j][i]
     routeLength +=
-      currentDotIndex > nextDotIndex
-        ? desirabilityMatrix[nextDotIndex][currentDotIndex]!.distance
-        : desirabilityMatrix[currentDotIndex][nextDotIndex]!.distance;
+      currentDotIndex > nextDot.index
+        ? desirabilityMatrix[nextDot.index][currentDotIndex]!.distance
+        : desirabilityMatrix[currentDotIndex][nextDot.index]!.distance;
 
     // updating currentDotIndex
-    currentDotIndex = nextDotIndex;
+    currentDotIndex = nextDot.index;
     // saving route
-    route.push(nextDotIndex);
+    route.push(nextDot.index);
   } while (mapDotsDataMutable.length > 1);
   // adding path length from the last dot to the first
   routeLength +=
@@ -89,5 +95,5 @@ export default function getRoute({
     : (desirabilityMatrix[currentDotIndex][startIndex]!.pheromone +=
         pheromoneShift);
 
-  return { routeLength, updatedExplorationDesirabilityMatrix };
+  return { routeLength, route, updatedExplorationDesirabilityMatrix };
 }

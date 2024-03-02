@@ -2,17 +2,17 @@ import { atom } from "jotai";
 
 // ACO parameters
 export const parametersAtom = atom<IACOParameters>({
-  quantity: 20,
-  initialPheromone: 0.2,
+  quantity: 50,
+  initialPheromone: 0.1,
   evaporationRate: 0.1,
-  maxIterationsCounter: 10,
-  alpha: 1,
-  beta: 4,
-  q0: 4,
+  maxIterationsCounter: 100,
+  alpha: 1.5,
+  beta: 1.2,
+  q0: 1,
 });
 
 // ant map data
-export const mapDotsDataAtom = atom<IDot[]>([]);
+export const mapDotsDataAtom = atom<IDotWithIndex[]>([]);
 // desirabilityMatrix
 export const desirabilityMatrixAtom = atom<TDesirabilityMatrix | null>(null);
 export const writeOnlyResetDesirabilityMatrixAtom = atom(null, (get, set) => {
@@ -40,4 +40,7 @@ export const writeOnlyResetIterationsCounterAtom = atom(null, (get, set) => {
 });
 
 // best route
-export const bestRouteAtom = atom<number>(Infinity);
+export const bestRouteAtom = atom<IBestRoute>({ length: Infinity, route: [] });
+export const writeOnlyResetBestRouteAtom = atom(null, (get, set) => {
+  set(bestRouteAtom, { length: Infinity, route: [] });
+});
