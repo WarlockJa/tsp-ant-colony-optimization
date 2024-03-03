@@ -7,12 +7,6 @@ export default function BestRoutePlot({
   route: number[];
   mapDotsData: IDotWithIndex[];
 }) {
-  //   let previousDot = route[0]
-  //   let result: JSX.Element[] = []
-  //   for (let index = 1; index < route.length; index++) {
-  //     result.push(<Line />)
-
-  //   }
   const result = route.map((item, index, self) => {
     const lastItem = index === self.length - 1;
     return (

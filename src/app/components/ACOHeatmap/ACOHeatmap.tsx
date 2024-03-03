@@ -4,6 +4,7 @@ import {
   iterationsCounterAtom,
   mapDotsDataAtom,
   parametersAtom,
+  selectedPointsAtom,
   solveFlagAtom,
 } from "@/store/jotai";
 import { useAtom } from "jotai";
@@ -12,6 +13,8 @@ import initialiseDesirabilityMatrix from "./utils/initialiseDesirabilityMatrix";
 import Line from "@/app/utils/Line";
 import { useEffect } from "react";
 import BestRoutePlot from "./BestRoutePlot";
+import SelectedPointsData from "./SelectedPointsData";
+import SelectedPointsLine from "./SelectedPointsLine";
 
 export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
   // console.log("ACOHeatmap - Rerender");
@@ -31,6 +34,8 @@ export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
   );
   // best route
   const [bestRoute, setBestRoute] = useAtom(bestRouteAtom);
+  // selected points
+  const [selectedPoints] = useAtom(selectedPointsAtom);
 
   // Reset on parameters change
   useEffect(() => {
@@ -120,14 +125,33 @@ export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
       <div className="absolute left-0 top-[3.2em] text-teal-50">
         Best Route: {bestRoute.length}
       </div>
-      <div className="absolute left-0 top-[4.2em] text-teal-50">
+      <div className="absolute left-0 top-[4.5em] text-teal-50">
         Iteration N: {iterationsCounter}
       </div>
+      <div className="absolute left-0 top-[6.5em] text-teal-50">
+        Selected Points
+      </div>
+      <div className="absolute left-0 top-[8em] text-teal-50">
+        {selectedPoints.pointA !== null ? selectedPoints.pointA : "TBD"}
+        {" - "}
+        {selectedPoints.pointB !== null ? selectedPoints.pointB : "TBD"}
+      </div>
+
+      <SelectedPointsData
+        desirabilityMatrix={desirabilityMatrix}
+        pointA={selectedPoints.pointA}
+        pointB={selectedPoints.pointB}
+      />
       <svg
         width="100vw"
         height="100vh"
         className="translate-x-[0.5em] translate-y-[0.5em]"
       >
+        <SelectedPointsLine
+          desirabilityMatrix={desirabilityMatrix}
+          pointA={selectedPoints.pointA}
+          pointB={selectedPoints.pointB}
+        />
         {desirabilityMatrix
           .map((row, indexI) => {
             return row.map((item, indexJ) => {

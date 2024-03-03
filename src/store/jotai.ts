@@ -6,7 +6,7 @@ export const parametersAtom = atom<IACOParameters>({
   initialPheromone: 0.1,
   evaporationRate: 0.1,
   maxIterationsCounter: 100,
-  alpha: 1.5,
+  alpha: 2,
   beta: 1.2,
   q0: 1,
 });
@@ -43,4 +43,13 @@ export const writeOnlyResetIterationsCounterAtom = atom(null, (get, set) => {
 export const bestRouteAtom = atom<IBestRoute>({ length: Infinity, route: [] });
 export const writeOnlyResetBestRouteAtom = atom(null, (get, set) => {
   set(bestRouteAtom, { length: Infinity, route: [] });
+});
+
+// selected points data
+export const selectedPointsAtom = atom<{
+  pointA: number | null;
+  pointB: number | null;
+}>({ pointA: null, pointB: null });
+export const writeOnlyResetSelectedPointsAtom = atom(null, (get, set) => {
+  set(selectedPointsAtom, { pointA: null, pointB: null });
 });

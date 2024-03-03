@@ -3,6 +3,7 @@ import {
   mapDotsDataAtom,
   mapGenerateFlagAtom,
   parametersAtom,
+  selectedPointsAtom,
 } from "@/store/jotai";
 import generateDots from "./utils/generateDots";
 import { useEffect } from "react";
@@ -11,6 +12,7 @@ export default function AntMap() {
   const [parameters] = useAtom(parametersAtom);
   const [mapGenerateFlag, setMapGenerateFlag] = useAtom(mapGenerateFlagAtom);
   const [mapDotData, setMapDotsData] = useAtom(mapDotsDataAtom);
+  const [selectedPoints, setSelectedPoints] = useAtom(selectedPointsAtom);
 
   // generate new map handler
   useEffect(() => {
@@ -33,7 +35,19 @@ export default function AntMap() {
               left: `${position.x}%`,
               top: `${position.y}%`,
             }}
-            className={`h-[1em] w-[1em] rounded-full absolute bg-white cursor-pointer z-10`}
+            className={`h-[1em] w-[1em] rounded-full absolute ${
+              selectedPoints.pointA === index || selectedPoints.pointB === index
+                ? "bg-green-400"
+                : "bg-white"
+            } cursor-pointer z-10`}
+            onClick={() => {
+              index !== selectedPoints.pointA &&
+                index !== selectedPoints.pointB &&
+                setSelectedPoints((prev) => ({
+                  pointA: prev.pointB,
+                  pointB: index,
+                }));
+            }}
           ></div>
         );
       })}

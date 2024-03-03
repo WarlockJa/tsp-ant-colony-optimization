@@ -3,6 +3,7 @@ import {
   writeOnlyResetBestRouteAtom,
   writeOnlyResetDesirabilityMatrixAtom,
   writeOnlyResetIterationsCounterAtom,
+  writeOnlyResetSelectedPointsAtom,
   writeOnlySetMapGenerateFlagFalse,
   writeOnlySetSolveFlagFlaseAtom,
   writeOnlySetSolveFlagTrueAtom,
@@ -27,6 +28,8 @@ export default function ACOControls() {
   );
   // best route reset
   const [, resetBestRoute] = useAtom(writeOnlyResetBestRouteAtom);
+  // reset selected points
+  const [, resetSelectedPoints] = useAtom(writeOnlyResetSelectedPointsAtom);
 
   return (
     <nav className="fixed left-0 top-0 flex gap-4 items-center z-20">
@@ -45,6 +48,7 @@ export default function ACOControls() {
           resetDesirabilityMatrix();
           resetIterationCounter();
           resetBestRoute();
+          resetSelectedPoints();
         }}
       >
         Reset
@@ -58,6 +62,7 @@ export default function ACOControls() {
           resetDesirabilityMatrix();
           resetIterationCounter();
           resetBestRoute();
+          resetSelectedPoints();
         }}
       >
         Generate
