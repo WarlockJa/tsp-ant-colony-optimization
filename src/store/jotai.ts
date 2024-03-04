@@ -6,7 +6,7 @@ export const parametersAtom = atom<IACOParameters>({
   initialPheromone: 0.1,
   evaporationRate: 0.1,
   maxIterationsCounter: 100,
-  alpha: 2,
+  alpha: 3,
   beta: 1.2,
   q0: 1,
 });

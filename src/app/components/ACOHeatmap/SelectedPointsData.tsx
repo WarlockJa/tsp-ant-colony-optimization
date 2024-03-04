@@ -14,7 +14,7 @@ export default function SelectedPointsData({
       ? desirabilityMatrix[pointA][pointB]
       : desirabilityMatrix[pointB][pointA];
   return (
-    <div className="absolute left-0 top-[9.5em] text-teal-50">
+    <div>
       <div>Distance: {data?.distance}</div>
       <div>Pheromones: {data?.pheromone}</div>
     </div>

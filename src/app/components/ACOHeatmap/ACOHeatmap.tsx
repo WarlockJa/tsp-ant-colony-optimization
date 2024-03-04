@@ -11,7 +11,7 @@ import { useAtom } from "jotai";
 import getRoute from "./utils/getRoute";
 import initialiseDesirabilityMatrix from "./utils/initialiseDesirabilityMatrix";
 import Line from "@/app/utils/Line";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import BestRoutePlot from "./BestRoutePlot";
 import SelectedPointsData from "./SelectedPointsData";
 import SelectedPointsLine from "./SelectedPointsLine";
@@ -122,26 +122,22 @@ export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
 
   return (
     <>
-      <div className="absolute left-0 top-[3.2em] text-teal-50">
-        Best Route: {bestRoute.length}
-      </div>
-      <div className="absolute left-0 top-[4.5em] text-teal-50">
-        Iteration N: {iterationsCounter}
-      </div>
-      <div className="absolute left-0 top-[6.5em] text-teal-50">
-        Selected Points
-      </div>
-      <div className="absolute left-0 top-[8em] text-teal-50">
-        {selectedPoints.pointA !== null ? selectedPoints.pointA : "TBD"}
-        {" - "}
-        {selectedPoints.pointB !== null ? selectedPoints.pointB : "TBD"}
-      </div>
+      <div className="absolute left-0 top-12 bg-black bg-opacity-40 p-4 text-teal-50 rounded">
+        <div>Best Route: {bestRoute.length}</div>
+        <div>Iteration N: {iterationsCounter}</div>
+        <div>
+          Selected Points:{" "}
+          {selectedPoints.pointA !== null ? selectedPoints.pointA : "TBD"}
+          {" - "}
+          {selectedPoints.pointB !== null ? selectedPoints.pointB : "TBD"}
+        </div>
 
-      <SelectedPointsData
-        desirabilityMatrix={desirabilityMatrix}
-        pointA={selectedPoints.pointA}
-        pointB={selectedPoints.pointB}
-      />
+        <SelectedPointsData
+          desirabilityMatrix={desirabilityMatrix}
+          pointA={selectedPoints.pointA}
+          pointB={selectedPoints.pointB}
+        />
+      </div>
       <svg
         width="100vw"
         height="100vh"
@@ -162,7 +158,7 @@ export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
                   x2={item.pointB.x}
                   y1={item.pointA.y}
                   y2={item.pointB.y}
-                  width={item.pheromone}
+                  width={item.pheromone * 1.5}
                 />
               ) : (
                 item

@@ -36,7 +36,10 @@ export default function ACOControls() {
       <button
         className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
         title="Start ACO sequence"
-        onClick={() => setSolveFlagTrue()}
+        onClick={() => {
+          setSolveFlagTrue();
+          resetDesirabilityMatrix();
+        }}
       >
         Solve
       </button>
