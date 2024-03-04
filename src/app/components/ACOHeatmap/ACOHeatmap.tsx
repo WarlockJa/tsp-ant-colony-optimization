@@ -122,7 +122,7 @@ export default function ACOHeatmap({ screenRatio }: { screenRatio: number }) {
 
   return (
     <>
-      <div className="absolute left-0 top-12 bg-black bg-opacity-40 p-4 text-teal-50 rounded">
+      <div className="absolute left-0 top-12 bg-menu bg-opacity-40 p-4 text-menu_font_color rounded">
         <div>Best Route: {bestRoute.length}</div>
         <div>Iteration N: {iterationsCounter}</div>
         <div>

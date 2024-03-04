@@ -32,9 +32,9 @@ export default function ACOControls() {
   const [, resetSelectedPoints] = useAtom(writeOnlyResetSelectedPointsAtom);
 
   return (
-    <nav className="fixed left-0 top-0 flex gap-4 items-center z-20">
+    <nav className="fixed left-0 top-0 right-0 flex gap-4 px-4 items-center z-20">
       <button
-        className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
+        className="rounded-md bg-button_bg dark:bg-dark_button_bg hover:bg-hover_color transition-colors py-2 px-4"
         title="Start ACO sequence"
         onClick={() => {
           setSolveFlagTrue();
@@ -44,7 +44,7 @@ export default function ACOControls() {
         Solve
       </button>
       <button
-        className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
+        className="rounded-md bg-button_bg dark:bg-dark_button_bg hover:bg-hover_color transition-colors py-2 px-4"
         title="Reset values"
         onClick={() => {
           setSolveFlagFalse();
@@ -57,7 +57,7 @@ export default function ACOControls() {
         Reset
       </button>
       <button
-        className="rounded-md bg-slate-400 hover:bg-slate-200 transition-colors py-2 px-4"
+        className="rounded-md bg-button_bg dark:bg-dark_button_bg hover:bg-hover_color transition-colors py-2 px-4"
         title="Generate new dots"
         onClick={() => {
           setMapGenerateFlagFalse();
@@ -70,8 +70,8 @@ export default function ACOControls() {
       >
         Generate
       </button>
-      <div className="flex flex-col text-teal-50">
-        <div className="flex justify-between pr-4">
+      <div className="flex flex-col text-font_color dark:text-dark_font_color w-1/6">
+        <div className="flex justify-between pr-2">
           <label htmlFor="ACOControls__input--alpha">Alpha</label>
           <label htmlFor="ACOControls__input--alpha">{parameters.alpha}</label>
         </div>
@@ -90,8 +90,8 @@ export default function ACOControls() {
           }
         />
       </div>
-      <div className="flex flex-col text-teal-50">
-        <div className="flex justify-between pr-4">
+      <div className="flex flex-col text-font_color dark:text-dark_font_color w-1/6">
+        <div className="flex justify-between pr-2">
           <label htmlFor="ACOControls__input--beta">Beta</label>
           <label htmlFor="ACOControls__input--beta">{parameters.beta}</label>
         </div>
@@ -107,9 +107,9 @@ export default function ACOControls() {
           }
         />
       </div>
-      <div className="flex flex-col text-teal-50">
-        <div className="flex justify-between pr-4">
-          <label htmlFor="ACOControls__input--quantity">quantity</label>
+      <div className="flex flex-col text-font_color dark:text-dark_font_color w-1/6">
+        <div className="flex justify-between pr-2">
+          <label htmlFor="ACOControls__input--quantity">quantity </label>
           <label htmlFor="ACOControls__input--quantity">
             {parameters.quantity}
           </label>
@@ -128,8 +128,8 @@ export default function ACOControls() {
           }
         />
       </div>
-      <div className="flex flex-col text-teal-50">
-        <div className="flex justify-between pr-4">
+      <div className="flex flex-col text-font_color dark:text-dark_font_color w-1/6">
+        <div className="flex justify-between pr-2">
           <label htmlFor="ACOControls__input--quantity">
             initial pheromone
           </label>
@@ -152,8 +152,8 @@ export default function ACOControls() {
           }
         />
       </div>
-      <div className="flex flex-col text-teal-50">
-        <div className="flex justify-between pr-4">
+      <div className="flex flex-col text-font_color dark:text-dark_font_color w-1/6">
+        <div className="flex justify-between pr-2">
           <label htmlFor="ACOControls__input--maxIterations">
             max iterations
           </label>
@@ -175,9 +175,9 @@ export default function ACOControls() {
           }
         />
       </div>
-      <div className="flex flex-col text-teal-50">
-        <div className="flex justify-between pr-4">
-          <label htmlFor="ACOControls__input--q0">Q constant</label>
+      <div className="flex flex-col text-font_color dark:text-dark_font_color w-1/6">
+        <div className="flex justify-between pr-2">
+          <label htmlFor="ACOControls__input--q0">Q constant </label>
           <label htmlFor="ACOControls__input--q0">{parameters.q0}</label>
         </div>
         <input
@@ -195,8 +195,8 @@ export default function ACOControls() {
           }
         />
       </div>
-      <div className="flex flex-col text-teal-50">
-        <div className="flex justify-between pr-4">
+      <div className="flex flex-col text-font_color dark:text-dark_font_color w-1/6">
+        <div className="flex justify-between pr-2">
           <label htmlFor="ACOControls__input--evaporationRate">
             evaporation rate
           </label>

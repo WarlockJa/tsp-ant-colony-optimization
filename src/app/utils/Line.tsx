@@ -12,7 +12,7 @@ export default function Line({
   y1,
   x2,
   y2,
-  color = "#fdf4",
+  color = "#fdf9",
   width = 0,
 }: ILineProps): JSX.Element {
   return (

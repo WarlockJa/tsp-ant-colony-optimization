@@ -37,8 +37,8 @@ export default function AntMap() {
             }}
             className={`h-[1em] w-[1em] rounded-full absolute ${
               selectedPoints.pointA === index || selectedPoints.pointB === index
-                ? "bg-green-400"
-                : "bg-white"
+                ? "bg-selected_dot_color"
+                : "bg-dot_color dark:bg-dark_dot_color"
             } cursor-pointer z-10`}
             onClick={() => {
               index !== selectedPoints.pointA &&
